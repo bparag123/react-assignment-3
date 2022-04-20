@@ -49,10 +49,10 @@ const TodoList = () => {
   }
 
   return (
-    <>
-      <div className={classes["todo-list-container"]} ref={listRef}>{listContent}</div>
+    <div className={classes["todo-list-container"]}>
+      <div className={classes["temp"]} ref={listRef}>{listContent}</div>
       <InputTodo onSave={onInputEvent} />
-    </>
+    </div>
   );
 };
 export default TodoList;

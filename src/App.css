@@ -3,11 +3,19 @@
 }
 
 body {
-  background-color: beige;
+  background-color: rgb(230, 228, 221);
 }
 
 .App {
+  height: 70vh;
+  width: 30%;
   position: relative;
-  margin-top: 2rem;
-  height: 50%;
+  left: 50%;
+  transform: translate(-50%, 15vh);
+}
+
+@media only screen and (max-width: 760px) {
+  .App {
+    width: 80%;
+  }
 }
