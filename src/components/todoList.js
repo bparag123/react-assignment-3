@@ -1,66 +1,58 @@
-import InputTodo from "./inputTodo"
-import TodoItem from "./todoItem"
-import { useState, useEffect } from 'react';
+import InputTodo from "./inputTodo";
+import TodoItem from "./todoItem";
+import { useState, useEffect, useRef } from "react";
+import classes from "./Todolist.module.css"
 
 const TodoList = () => {
-    let initialState = []
+  let initialState = [];
 
-    //Getting the Data from LocalStorage
-    try {
-        initialState = JSON.parse(localStorage.getItem('todoData'))
-        initialState = initialState.filter((ele) => {
-            let today = new Date()
-            let day = new Date(ele.date)
-            return day.getDate() === today.getDate()
-                && day.getDay() === today.getDay()
-                && day.getFullYear() === today.getFullYear()
-        })
-    } catch (error) {
-        initialState = []
-    }
-    const [field, setField] = useState({
-        inputField: false
-    })
+  //Getting the Data from LocalStorage
+  try {
+    initialState = JSON.parse(localStorage.getItem("todoData"));
+    initialState = initialState.filter((ele) => {
+      let today = new Date();
+      let day = new Date(ele.date);
+      return (
+        day.getDate() === today.getDate() &&
+        day.getDay() === today.getDay() &&
+        day.getFullYear() === today.getFullYear()
+      );
+    });
+  } catch (error) {
+    initialState = [];
+  }
 
-    const [todo, setTodo] = useState(initialState)
-    const [input, setInput] = useState("")
+  const [todo, setTodo] = useState(initialState);
+  const listRef = useRef(null)
 
-    useEffect(() => {
-        localStorage.setItem("todoData", JSON.stringify(todo))
-        setInput("")
-    }, [todo]);
+  useEffect(() => {
+    localStorage.setItem("todoData", JSON.stringify(todo));
+    listRef.current.scrollTop = listRef.current.scrollHeight
+  }, [todo]);
 
-    const clickHandle = () => {
-        setField(!field)
-    }
+  const onInputEvent = (data) => {
+    setTodo(() => {
+      return [...todo, data];
+    });
+  };
 
-    const onKeyUp = (e) => {
-        console.log(e.keyCode)
-        if (e.keyCode === 13) {
-            if (input === "") {
-                alert("Please Enter Title ")
-            }
-            else {
-                setTodo([...todo, { title: input, date: Date.now() }])
-            }
-        }
-        if (e.keyCode === 27) {
-            setField(!field)
-        }
-    }
+  let listContent = <h3>No Todo Items Found</h3>;
 
-    const handleInput = (e) => {
-        setInput(e.target.value)
-    }
-    return <div>
-        {todo.map((ele) => {
-            return <TodoItem text={ele.title} />
-        })}
-        {field ?
-            <button onClick={clickHandle}>+</button>
-            : <InputTodo handler={handleInput} value={input} onKeyUp={onKeyUp} />}
+  if (todo.length > 0) {
+    listContent = todo.map((ele, index) => {
+      return (
+        <div className={classes["todo-item"]} key={index}>
+          <TodoItem title={ele.title} />
+        </div>
+      );
+    });
+  }
 
-
-    </div>
-}
-export default TodoList
+  return (
+    <>
+      <div className={classes["todo-list-container"]} ref={listRef}>{listContent}</div>
+      <InputTodo onSave={onInputEvent} />
+    </>
+  );
+};
+export default TodoList;

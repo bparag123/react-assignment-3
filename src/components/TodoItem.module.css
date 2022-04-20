@@ -1,0 +1,23 @@
+.todo-item-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0rem 1rem;
+  font-weight: 600;
+  font-size: medium;
+}
+
+.completed {
+  stroke: rgb(90, 90, 90);
+  color: rgb(88, 86, 86);
+}
+.check {
+  font-size: 1.5rem;
+}
+
+.completed > .check {
+  color: green;
+}
+
+.pending > .check {
+  color: black;
+}
